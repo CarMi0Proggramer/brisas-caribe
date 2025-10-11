@@ -43,10 +43,12 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ 
-            matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || 
-            (matrix.platform == 'windows-latest' && 'i686-pc-windows-msvc,x86_64-pc-windows-msvc') || 
+            matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' ||
+            matrix.platform == 'windows-latest' && 'i686-pc-windows-msvc,x86_64-pc-windows-msvc' ||
+            matrix.platform == 'ubuntu-22.04' && '' ||
             '' 
           }}
+
 
       - name: install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-22.04'
