@@ -7,20 +7,12 @@ fn greet(name: &str) -> String {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let migrations = vec![
-        Migration {
-            version: 2,
-            description: "create_initial_tables",
-            sql: include_str!("../migrations/0001-create-initial-tables.sql"),
-            kind: MigrationKind::Up,
-        },
-        Migration {
-            version: 2,
-            description: "remove_perching_column",
-            sql: include_str!("../migrations/0002-remove-perching-column.sql"),
-            kind: MigrationKind::Up,
-        },
-    ];
+    let migrations = vec![Migration {
+        version: 3,
+        description: "create_initial_tables",
+        sql: include_str!("../migrations/0001-create-initial-tables.sql"),
+        kind: MigrationKind::Up,
+    }];
 
     tauri::Builder::default()
         .plugin(

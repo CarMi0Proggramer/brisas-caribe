@@ -11,7 +11,6 @@ CREATE TABLE jobs (
     price NUMERIC NOT NULL,
     car_type TEXT NOT NULL,
     is_uber BOOLEAN NOT NULL,
-    with_perching BOOLEAN NOT NULL,
     payment_type TEXT NOT NULL,
     created_at DATE NOT NULL DEFAULT (DATE('now')),
     FOREIGN KEY (service_id) REFERENCES services(id)
