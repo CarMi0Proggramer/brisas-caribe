@@ -21,16 +21,23 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import AppJobsTable from "@/components/AppJobsTable.vue";
-import { ref, watch } from "vue";
-import { useJobs, UseJobsOptions } from "@/lib/composables/useJobs";
-import { Search } from "lucide-vue-next";
-import { debounce } from "@/lib/debounce";
 import { Button } from "@/components/ui/button";
+import AppJobsTable from "@/components/AppJobsTable.vue";
+import AppJobDialog from "@/components/AppJobDialog.vue";
+import { useJobs } from "@/lib/composables/useJobs";
+import { debounce } from "@/lib/utils/debounce";
+import { Plus, Search } from "lucide-vue-next";
+import { ref, watch } from "vue";
+import { Job } from "@/lib/interfaces/job";
+import { PaginateOptions } from "@/lib/interfaces/paginate-options";
+import { createOrUpdateJob, deleteJob } from "@/lib/repositories/job";
+import { showMessage } from "@/lib/utils/show-message";
 
 const { loading, error, jobs, fetchJobs, pagination } = useJobs();
+const isJobDialogOpen = ref<boolean>(false);
+const selectedJob = ref<Job | null>(null);
 
-const filters = ref<UseJobsOptions>({
+const filters = ref<PaginateOptions>({
   searchTerm: "",
   sortBy: "created_at",
   sortDirection: "DESC",
@@ -44,10 +51,32 @@ watch(
   debounce(() => fetchJobs(filters.value), 500),
   { deep: true }
 );
+
+async function onSubmit(job: Partial<Job>) {
+  await createOrUpdateJob(job);
+  fetchJobs(filters.value);
+
+  showMessage(job.id ? "Registro actualizado" : "Registro creado");
+}
+
+async function handleDelete(job: Job) {
+  await deleteJob(job.id);
+
+  if (jobs.value.length === 1) {
+    filters.value.page = Math.max(1, filters.value.page! - 1);
+
+    if (filters.value.page !== 1) {
+      return;
+    }
+  }
+
+  fetchJobs(filters.value);
+  showMessage("Registro eliminado");
+}
 </script>
 
 <template>
-  <section class="animate-fade-in">
+  <section class="p-8 space-y-8 animate-fade-in">
     <div class="flex w-full gap-6 mb-6">
       <InputGroup class="max-w-sm">
         <InputGroupInput
@@ -84,10 +113,28 @@ watch(
         </SelectContent>
       </Select>
       <div class="flex justify-end flex-1">
-        <Button>Nuevo Registro</Button>
+        <Button
+          @click="
+            isJobDialogOpen = true;
+            selectedJob = null;
+          "
+          class="flex items-center gap-2 px-4 py-2 text-base font-medium transition-all duration-200 hover:scale-105"
+        >
+          <Plus class="size-4" />
+          Nuevo Registro
+        </Button>
       </div>
     </div>
-    <AppJobsTable :loading="loading" :jobs="jobs" :error="error" />
+    <AppJobsTable
+      :loading="loading"
+      :jobs="jobs"
+      :error="error"
+      @delete="handleDelete"
+      @edit="
+        isJobDialogOpen = true;
+        selectedJob = $event;
+      "
+    />
     <Pagination
       class="justify-start my-8"
       v-slot="{ page }"
@@ -114,4 +161,9 @@ watch(
       </PaginationContent>
     </Pagination>
   </section>
+  <AppJobDialog
+    v-model="isJobDialogOpen"
+    :job="selectedJob"
+    @submit="onSubmit"
+  />
 </template>

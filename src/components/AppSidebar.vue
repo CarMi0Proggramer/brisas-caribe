@@ -31,7 +31,7 @@ const items = [
 </script>
 
 <template>
-  <Sidebar collapsible="none" class="min-h-screen">
+  <Sidebar collapsible="none" class="fixed left-0 min-h-screen">
     <SidebarHeader class="px-4 py-6 border-b">
       <div class="flex items-center gap-3">
         <img

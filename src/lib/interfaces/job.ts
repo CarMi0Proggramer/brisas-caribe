@@ -8,7 +8,6 @@ export interface Job {
   price: number;
   car_type: string;
   is_uber: boolean;
-  with_perching: boolean;
   payment_type: PaymentType;
   created_at: string;
   service?: Service;

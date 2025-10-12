@@ -1,12 +1,10 @@
 import { ref } from "vue";
-import { getDatabase } from "../database";
 import { Service } from "../interfaces/service";
 import { Pagination } from "../interfaces/pagination";
 import { ROWS_PER_PAGE } from "../constants";
-
-interface UseServicesOptions {
-  page?: number;
-}
+import { getServices } from "../repositories/services";
+import { PaginateOptions } from "../interfaces/paginate-options";
+import { sleep } from "../utils/sleep";
 
 export function useServices() {
   const loading = ref<boolean>(false);
@@ -14,39 +12,22 @@ export function useServices() {
   const pagination = ref<Pagination>({ perPage: ROWS_PER_PAGE });
   const services = ref<Service[]>([]);
 
-  const fetchServices = async (options?: UseServicesOptions) => {
+  const fetchServices = async (options?: PaginateOptions) => {
+    const start = Date.now();
     loading.value = true;
 
-    const page: number = options?.page ?? 1;
-    const skip = (page - 1) * ROWS_PER_PAGE;
-
     try {
-      const db = await getDatabase();
-      const results = await db.select<Service[]>(
-        `
-      SELECT * FROM services
-      LIMIT ? OFFSET ?
-      ORDER BY name ASC
-      `,
-        [ROWS_PER_PAGE, skip]
-      );
+      const result = await getServices(options);
 
-      services.value = results;
-
-      const { totalItems } = await db.select<{ totalItems: number }>(
-        "SELECT COUNT(*) as totalItems from services"
-      );
-
-      pagination.value = {
-        page,
-        totalItems,
-        perPage: ROWS_PER_PAGE,
-        totalPages: Math.ceil(totalItems / ROWS_PER_PAGE),
-      };
-
+      pagination.value = result.pagination;
+      services.value = result.services;
       error.value = false;
-    } catch {
+    } catch (err) {
       error.value = true;
+    }
+
+    if (Date.now() - start < 300) {
+      await sleep(300);
     }
 
     loading.value = false;

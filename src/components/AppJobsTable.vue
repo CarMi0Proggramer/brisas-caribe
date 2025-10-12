@@ -13,9 +13,14 @@ import AppJobRowError from "./AppJobRowError.vue";
 import { PaymentType } from "@/lib/enums/payment-type";
 import { Job } from "@/lib/interfaces/job";
 import { ROWS_PER_PAGE } from "@/lib/constants";
-import { Trash } from "lucide-vue-next";
+import { Trash, Pencil } from "lucide-vue-next";
+import { formatDate } from "@/lib/utils/format-date";
 
 defineProps<{ loading: boolean; jobs: Job[]; error: boolean }>();
+defineEmits<{
+  (event: "edit", job: Job): void;
+  (event: "delete", job: Job): void;
+}>();
 
 function getPaymentTypeText(paymentType: PaymentType): string {
   switch (paymentType) {
@@ -29,11 +34,6 @@ function getPaymentTypeText(paymentType: PaymentType): string {
       return "PIX";
   }
 }
-
-function formatDate(date: string): string {
-  // TODO
-  return date;
-}
 </script>
 
 <template>
@@ -43,7 +43,6 @@ function formatDate(date: string): string {
         <TableHead class="font-semibold text-base"> Chapa del Carro </TableHead>
         <TableHead class="font-semibold text-base">Marca del Carro</TableHead>
         <TableHead class="font-semibold text-base">Tipo de Servicio</TableHead>
-        <TableHead class="font-semibold text-base">Perching</TableHead>
         <TableHead class="font-semibold text-base">Uber</TableHead>
         <TableHead class="font-semibold text-base">Método de Pago</TableHead>
         <TableHead class="font-semibold text-base">Fecha</TableHead>
@@ -62,13 +61,28 @@ function formatDate(date: string): string {
         <TableCell class="font-medium">{{ job.plate }}</TableCell>
         <TableCell>{{ job.car_type }}</TableCell>
         <TableCell>{{ job.service!.name }}</TableCell>
-        <TableCell>{{ job.with_perching ? "Sí ✅" : "No ❌" }}</TableCell>
         <TableCell>{{ job.is_uber ? "Sí ✅" : "No ❌" }}</TableCell>
         <TableCell>{{ getPaymentTypeText(job.payment_type) }}</TableCell>
         <TableCell>{{ formatDate(job.created_at) }}</TableCell>
-        <TableCell>{{ job.price }}</TableCell>
+        <TableCell>R$ {{ job.price }}</TableCell>
         <TableCell>
-          <Button variant="outline"><Trash /></Button>
+          <Button
+            @click="$emit('edit', job)"
+            variant="outline"
+            size="icon"
+            title="Editar"
+          >
+            <Pencil class="size-4" />
+          </Button>
+          <Button
+            class="ms-2"
+            @click="$emit('delete', job)"
+            variant="destructive"
+            size="icon"
+            title="Eliminar"
+          >
+            <Trash class="size-4" />
+          </Button>
         </TableCell>
       </TableRow>
     </TableBody>
