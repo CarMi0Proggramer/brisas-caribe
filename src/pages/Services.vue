@@ -23,7 +23,7 @@ import { showMessage } from "@/lib/utils/show-message";
 
 const { loading, error, services, fetchServices, pagination } = useServices();
 const isServiceDialogOpen = ref<boolean>(false);
-const selectedService = ref<Service | null>(null);
+const selectedService = ref<Service>();
 const currentPage = ref<number>(1);
 
 fetchServices({ page: currentPage.value });
@@ -63,7 +63,7 @@ async function handleDelete(service: Service) {
         <Button
           @click="
             isServiceDialogOpen = true;
-            selectedService = null;
+            selectedService = undefined;
           "
           class="flex items-center gap-2 px-4 py-2 text-base font-medium transition-all duration-200 hover:scale-105"
         >

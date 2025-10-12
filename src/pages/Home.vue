@@ -35,7 +35,7 @@ import { showMessage } from "@/lib/utils/show-message";
 
 const { loading, error, jobs, fetchJobs, pagination } = useJobs();
 const isJobDialogOpen = ref<boolean>(false);
-const selectedJob = ref<Job | null>(null);
+const selectedJob = ref<Job>();
 
 const filters = ref<PaginateOptions>({
   searchTerm: "",
@@ -116,7 +116,7 @@ async function handleDelete(job: Job) {
         <Button
           @click="
             isJobDialogOpen = true;
-            selectedJob = null;
+            selectedJob = undefined;
           "
           class="flex items-center gap-2 px-4 py-2 text-base font-medium transition-all duration-200 hover:scale-105"
         >
