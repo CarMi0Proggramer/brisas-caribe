@@ -16,7 +16,7 @@ jobs:
         include:
           - platform: "ubuntu-22.04"
             args: ""
-          - platform: "windows-latest"
+          - platform: "windows-2022"
             args: "--target i686-pc-windows-msvc"
 
     runs-on: ${{ matrix.platform }}
