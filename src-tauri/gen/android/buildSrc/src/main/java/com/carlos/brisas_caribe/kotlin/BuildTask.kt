@@ -16,7 +16,9 @@ open class BuildTask : DefaultTask() {
 
     @TaskAction
     fun assemble() {
-        val executable = """bun""";
+        val homeDir = System.getProperty("user.home")
+        val bunPath = "$homeDir/.bun/bin/bun"
+        val executable = if (File(bunPath).exists()) bunPath else "bun"
         try {
             runTauriCli(executable)
         } catch (e: Exception) {
