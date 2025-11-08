@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "brisas-caribe",
+  "productName": "Brisas Caribe",
   "version": "0.1.0",
   "identifier": "com.carlos.brisas-caribe",
   "build": {
