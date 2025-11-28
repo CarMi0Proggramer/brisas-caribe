@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BarChart2, Home, Settings } from "lucide-vue-next";
+import { BarChart2, Home, Settings, Menu } from "lucide-vue-next";
 import {
   Sidebar,
   SidebarHeader,
@@ -9,29 +9,26 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
 
 const items = [
-  {
-    title: "Administración",
-    url: "/",
-    icon: Home,
-  },
-  {
-    title: "Servicios",
-    url: "/services",
-    icon: Settings,
-  },
-  {
-    title: "Ventas",
-    url: "/sales",
-    icon: BarChart2,
-  },
+  { title: "Administración", url: "/", icon: Home },
+  { title: "Servicios", url: "/services", icon: Settings },
+  { title: "Ventas", url: "/sales", icon: BarChart2 },
 ];
 </script>
-
 <template>
-  <Sidebar collapsible="none" class="fixed left-0 min-h-screen">
+  <div class="md:hidden p-4 fixed top-0 left-0 z-50">
+    <SidebarTrigger>
+      <Button variant="outline" size="icon">
+        <Menu class="size-8" />
+      </Button>
+    </SidebarTrigger>
+  </div>
+
+  <Sidebar collapsible="offcanvas" class="fixed left-0 min-h-screen z-40">
     <SidebarHeader class="px-4 py-6 border-b">
       <div class="flex items-center gap-3">
         <img
@@ -47,6 +44,7 @@ const items = [
         </div>
       </div>
     </SidebarHeader>
+
     <SidebarContent>
       <SidebarGroup>
         <SidebarGroupContent>

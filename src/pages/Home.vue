@@ -26,11 +26,11 @@ import AppJobsTable from "@/components/AppJobsTable.vue";
 import AppJobDialog from "@/components/AppJobDialog.vue";
 import { useJobs } from "@/lib/composables/useJobs";
 import { debounce } from "@/lib/utils/debounce";
+import { createOrUpdateJob, deleteJob } from "@/lib/repositories/job";
 import { Plus, Search } from "lucide-vue-next";
 import { ref, watch } from "vue";
 import { Job } from "@/lib/interfaces/job";
 import { PaginateOptions } from "@/lib/interfaces/paginate-options";
-import { createOrUpdateJob, deleteJob } from "@/lib/repositories/job";
 import { showMessage } from "@/lib/utils/show-message";
 
 const { loading, error, jobs, fetchJobs, pagination } = useJobs();
@@ -74,11 +74,10 @@ async function handleDelete(job: Job) {
   showMessage("Registro eliminado");
 }
 </script>
-
 <template>
-  <section class="p-8 space-y-8 animate-fade-in">
-    <div class="flex w-full gap-6 mb-6">
-      <InputGroup class="max-w-sm">
+  <section class="p-6 md:p-8 space-y-8 animate-fade-in">
+    <div class="w-full flex flex-wrap gap-4 md:gap-6 mb-6 items-center">
+      <InputGroup class="w-full sm:w-72 md:max-w-sm">
         <InputGroupInput
           v-model="filters.searchTerm"
           placeholder="Buscar chapa..."
@@ -88,7 +87,7 @@ async function handleDelete(job: Job) {
         </InputGroupAddon>
       </InputGroup>
       <Select v-model="filters.sortBy">
-        <SelectTrigger class="w-60">
+        <SelectTrigger class="w-full sm:w-60">
           <SelectValue placeholder="Ordenar..." />
         </SelectTrigger>
         <SelectContent>
@@ -101,7 +100,7 @@ async function handleDelete(job: Job) {
         </SelectContent>
       </Select>
       <Select v-model="filters.sortDirection">
-        <SelectTrigger class="w-60">
+        <SelectTrigger class="w-full sm:w-60">
           <SelectValue placeholder="Dirección..." />
         </SelectTrigger>
         <SelectContent>
@@ -112,13 +111,13 @@ async function handleDelete(job: Job) {
           </SelectGroup>
         </SelectContent>
       </Select>
-      <div class="flex justify-end flex-1">
+      <div class="flex justify-end w-full md:flex-1 md:justify-end">
         <Button
           @click="
             isJobDialogOpen = true;
             selectedJob = undefined;
           "
-          class="flex items-center gap-2 px-4 py-2 text-base font-medium transition-all duration-200 hover:scale-105"
+          class="flex items-center gap-2 px-4 py-2 text-base font-medium transition-all duration-200 hover:scale-105 w-full sm:w-auto"
         >
           <Plus class="size-4" />
           Nuevo Registro
@@ -136,7 +135,7 @@ async function handleDelete(job: Job) {
       "
     />
     <Pagination
-      class="justify-start my-8"
+      class="justify-center md:justify-start my-8"
       v-slot="{ page }"
       :page="pagination.page"
       :items-per-page="pagination.perPage"
@@ -144,9 +143,8 @@ async function handleDelete(job: Job) {
       :default-page="1"
       @update:page="filters.page = $event"
     >
-      <PaginationContent v-slot="{ items }">
+      <PaginationContent v-slot="{ items }" class="flex flex-wrap gap-2">
         <PaginationPrevious />
-
         <template v-for="(item, index) in items" :key="index">
           <PaginationItem
             v-if="item.type === 'page'"

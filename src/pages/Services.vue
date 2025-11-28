@@ -55,17 +55,18 @@ async function handleDelete(service: Service) {
   showMessage("Servicio eliminado");
 }
 </script>
-
 <template>
-  <section class="p-8 space-y-8 animate-fade-in">
-    <div class="flex w-full gap-6 mb-6">
-      <div class="flex justify-end flex-1">
+  <section class="p-6 md:p-8 space-y-8 animate-fade-in">
+    <div
+      class="w-full flex flex-wrap gap-4 md:gap-6 mb-6 items-center justify-between"
+    >
+      <div class="flex justify-end w-full md:flex-1">
         <Button
           @click="
             isServiceDialogOpen = true;
             selectedService = undefined;
           "
-          class="flex items-center gap-2 px-4 py-2 text-base font-medium transition-all duration-200 hover:scale-105"
+          class="flex items-center gap-2 px-4 py-2 text-base font-medium transition-all duration-200 hover:scale-105 w-full sm:w-auto"
         >
           <Plus class="size-4" />
           Nuevo Registro
@@ -83,7 +84,7 @@ async function handleDelete(service: Service) {
       "
     />
     <Pagination
-      class="justify-start my-8"
+      class="justify-center md:justify-start my-8"
       v-slot="{ page }"
       :page="pagination.page"
       :items-per-page="pagination.perPage"
@@ -91,7 +92,7 @@ async function handleDelete(service: Service) {
       :default-page="1"
       @update:page="currentPage = $event"
     >
-      <PaginationContent v-slot="{ items }">
+      <PaginationContent v-slot="{ items }" class="flex flex-wrap gap-2">
         <PaginationPrevious />
 
         <template v-for="(item, index) in items" :key="index">
@@ -103,6 +104,7 @@ async function handleDelete(service: Service) {
             {{ item.value }}
           </PaginationItem>
         </template>
+
         <PaginationEllipsis :index="4" />
         <PaginationNext />
       </PaginationContent>
