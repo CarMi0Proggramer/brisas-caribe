@@ -20,10 +20,12 @@ const items = [
 ];
 </script>
 <template>
-  <div class="md:hidden p-4 fixed top-0 left-0 z-50">
+  <div
+    class="md:hidden fixed top-0 left-0 z-50 pt-[env(safe-area-inset-top)] px-4"
+  >
     <SidebarTrigger>
-      <Button variant="outline" size="icon">
-        <Menu class="size-8" />
+      <Button variant="outline" size="icon-lg">
+        <Menu />
       </Button>
     </SidebarTrigger>
   </div>
